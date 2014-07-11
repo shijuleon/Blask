@@ -1,20 +1,16 @@
 """
-
-
+Blask - Simple blog based on Flask, SQLAlchemy and Bootstrap
 """
 
-
-from flask import Flask, request, session, redirect, url_for, abort, render_template, flash, g
+from flask import Flask, request, session, redirect, url_for, abort, render_template, flash
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.wtf import Form
-from wtforms import TextField, validators, PasswordField, TextAreaField, HiddenField
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms import TextField, validators, TextAreaField
 
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
-
 
 #Mapped classes
 class Posts(db.Model):
@@ -28,10 +24,15 @@ class Posts(db.Model):
 		return '<id %r>' % self.id
 #Forms
 class CreatePostForm(Form):
+	"""Create a new post form; can be extended"""
 	title = TextField('Title', [validators.required("Please enter a title")])
 	content = TextAreaField('Content', [validators.required("Please enter a body.")])
 
 #Define pages functionality
+#Can reduce code duplication for checking authentication using an library or function (flask.ext.login or similar)
+#Don't remove the if block for checking session if not using another session checking mechanism
+#because accessing the URL directly can enable the user to add, delete or edit a post
+
 @app.route('/')
 def index():
 		instance = db.session.query(Posts).order_by(Posts.id.desc())
@@ -67,6 +68,7 @@ def logout():
 @app.route('/admin')
 def admin():
 	if not session.get('logged_in'):
+		flash("You are not logged in.")
 		return redirect(url_for('login'))
 	instance = db.session.query(Posts).order_by(Posts.id.desc())
 	return render_template('admin.html', instance=instance, app=app)
@@ -74,6 +76,7 @@ def admin():
 @app.route('/admin/add', methods=['GET', 'POST'])
 def addpost():
 	if not session.get('logged_in'):
+		flash("You are not logged in.")
 		return redirect(url_for('login'))
 	post = Posts()
 	form = CreatePostForm()
@@ -88,6 +91,7 @@ def addpost():
 @app.route('/admin/edit/<int:id>', methods=['GET', 'POST'])
 def editpost(id):
 	if not session.get('logged_in'):
+		flash("You are not logged in.")
 		return redirect(url_for('login'))		
 	post = Posts.query.filter(Posts.id == id).first()
 	form = CreatePostForm(request.form, post)
@@ -102,6 +106,7 @@ def editpost(id):
 @app.route('/admin/delete/<int:id>')
 def deletepost(id):
 	if not session.get('logged_in'):
+		flash("You are not logged in.")
 		return redirect(url_for('login'))
 	delete = db.session.query(Posts).filter(id==id).first()
 	db.session.delete(delete)
@@ -111,4 +116,4 @@ def deletepost(id):
 
 #Rock and roll
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(port=app.config['PORT'], debug=app.config['DEBUG'])

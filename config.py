@@ -1,7 +1,8 @@
 SQLALCHEMY_DATABASE_URI= "sqlite:///blog.db"
 DEBUG=True
-SECRET_KEY = "RH#P$jwZaY83wyNX@zzK2eWq7bE6ZjhN_$"
+SECRET_KEY = "RH#P$jwZaY83wyNX@zzK2eWq7bE6ZjhN_$" #change this
 USERNAME='admin'
 PASSWORD='default'
+PORT = 5000 #default 5000
 TITLE = 'Blask'
-DESCRIPTION = 'The simple blog based on Flask, Bootstrap and SQLAlchemy'
+DESCRIPTION = 'Simple blogging system based on Flask, Bootstrap and SQLAlchemy'
