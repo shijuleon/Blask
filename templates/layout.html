@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Shiju Leon</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Personal site and blog of Shiju Leon"/>
+
+    <!-- bootstrap CSS -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+
+    <!-- custom CSS -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='blog.css') }}">
+      
+
+  </head>
+    
+  <body>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+        <a class="blog-nav-item active" href="/">Home</a>
+        {% if session.logged_in %}<a class="blog-nav-item" href="{{ url_for('addpost') }}">Add post</a>{% endif %}
+        {% if session.logged_in %}<a class="blog-nav-item" href="{{ url_for('admin') }}">Edit posts</a>{% endif %}
+        {% if not session.logged_in %}<a class="blog-nav-item" href="{{ url_for('login') }}">Log In</a>{% else %}<a class="blog-nav-item" href="{{ url_for('logout') }}">Log Out</a>{% endif %}
+        </nav>
+      </div>
+    </div>
+        
+    <div class="blog-header">
+      <h1 class="blog-title"><a href="/">{{ app.config['TITLE'] }}</a></h1>
+      <p class="lead blog-description">{{ app.config['DESCRIPTION'] }}</p>
+    </div><hr></br>
+
+      {% for message in get_flashed_messages() %}
+    <div class="container"><div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% block login %}{% endblock %}
+    
+    {% block content %}{% endblock %}
+
+    {% block show %}{% endblock %}
+
+    {% block admin %}{% endblock %}
+
+    <div class="blog-footer">
+      <p>By <a href="http://shijuleon.com">Shiju Leon</a>.</p>
+      <p><a href="#">Back to top</a></p>
+    </div>
+
+ 
+  </body>
+</html>

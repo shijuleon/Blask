@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+
+{% block show %}
+    <div class="container">
+      <div class="blog-main">
+        <h2 class="blog-post-title"><a href="">{{ instance.title }}<a href="{{ instance.id }}/{{ instance.title }}"></a></h2>
+        <p class="blog-post-meta">{{instance.pub_dtime }}</p>
+        {{ instance.content | safe }}
+      </div>
+    </div></br>
+{% endblock %}

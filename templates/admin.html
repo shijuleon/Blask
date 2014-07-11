@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block admin %}
+
+    {% for get in instance %}
+    <div class="container">
+      <div class="blog-main">
+    <h2 class="blog-post-title"><a href="{{ get.id }}/{{ get.title }}">{{ get.title }}</a></h2>
+    <p class="blog-post-meta">{{get.pub_dtime }} | {% if session.logged_in %}<a href="{{ url_for('editpost', id=get.id) }}">{% endif %}Edit</a> {% if session.logged_in %}<a href="{{ url_for('deletepost', id=get.id) }}">{% endif %}Delete</a></p>
+     {{ get.content | safe }}
+      </div>
+    </div></br>
+    {% endfor %}
+
+{% endblock %}
